@@ -121,13 +121,6 @@ class AjaxProxy
     protected $_rawHeaders        = NULL;
 
     /**
-     * Will hold the route for the proxy request submitted by the client in
-     *  the query string's 'route' parameter
-     * @var string
-     */
-    protected $_route             = NULL;
-
-    /**
      * Initializes the Proxy object
      *
      * @param string $forward_host The base address that all requests will be
@@ -210,26 +203,12 @@ class AjaxProxy
         $this->_loadRequestUserAgent();
         $this->_loadRawHeaders();
         $this->_loadContentType();
-        $this->_loadRoute();
 
         if($this->_requestMethod === self::REQUEST_METHOD_POST
             || $this->_requestMethod === self::REQUEST_METHOD_PUT)
         {
             $this->_loadRequestBody();
         }
-    }
-
-    /**
-     * Get the path to where the request will be made. This will be prepended
-     *  by PROXY_HOST
-     * @throws Exception When there is no 'route' parameter
-     */
-    protected function _loadRoute()
-    {
-        if(!key_exists('route', $_GET))
-            throw new Exception("You must supply a 'route' parameter in the request");
-
-        $this->_route = $_GET['route'];
     }
 
     /**
@@ -351,7 +330,7 @@ class AjaxProxy
      */
     protected function _makeRequest()
     {
-        $url = $this->_forwardHost . $this->_route;
+        $url = $this->_forwardHost;
 
         # Check for cURL. If it isn't loaded, fall back to fopen()
         if(function_exists('curl_init'))
