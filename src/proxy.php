@@ -572,8 +572,11 @@ class AjaxProxy
     {
         foreach($this->_responseHeaders as $name => $value)
         {
-            if($name != 'status')
-                header("$name: $value");
+            if($name == 'status') {
+				header($value);
+			} else {
+				header("$name: $value");
+			}
         }
     }
 
